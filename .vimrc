@@ -8,8 +8,27 @@
 " you aren't overriding anything you'd like to keep.
 
 " Plugins {{{
-" Load the following plugins: fugitive.vim
-execute pathogen#infect()
+" Load the following plugins: fugitive.vim, python-mode
+call pathogen#infect()
+call pathogen#helptags()
+
+" Configure pymode so that it only does what I want
+let g:pymode = 1 
+
+" Turn off unwanted python features
+let g:pymode_options = 0
+let g:pymode_folding = 0
+let g:pymode_doc = 0
+let g:pymode_virtualenv = 0
+let g:pymode_breakpoint = 0
+let g:pymode_rope = 0
+let g:pymode_syntax = 0
+let g:pymode_lint = 0
+
+" Turn on only the things I want
+let g:pymode_trim_whitespaces = 1 " Trim whitespaces on save
+let g:pymode_run = 1 " Binds running python code to <leader>r
+let g:pymode_motion = 1
 " }}}
 
 " Basic Settings {{{
@@ -116,7 +135,7 @@ nnoremap <leader>th :set hlsearch!<cr>
 
 " Git commands 
 nnoremap <leader>gs :Gstatus<cr>
-nnoremap <leader>ga :Git add %<cr><cr>
+nnoremap <leader>ga :Git add %<cr>
 nnoremap <leader>gc :Gcommit<cr>
 
 " Splitting windows
