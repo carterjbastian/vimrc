@@ -178,6 +178,34 @@ nnoremap <m-b> ggO
 nnoremap <m-e> Go
 " Turn off highlighting (after search)
 nnoremap <m-n> :noh<cr>
+
+" Move a line or group of lines up or down by count
+nnoremap <m-u> @='ddkP'<cr> 
+nnoremap <m-d> @='ddjP'<cr>
+
+" Define a function to do the moving to let this work in visual mode
+function! MoveGroup(direction, lines) range
+    exec 'silent '.a:firstline.','.a:lastline.'d'
+    let c = 0
+    
+    let maxChange = str2nr(a:lines)
+    echom maxChange
+    while c < maxChange
+        if a:direction == "up"
+            normal k
+        elseif a:direction == "down"
+            normal j
+        endif
+
+        let c += 1
+    endwhile
+    normal P
+endfunction
+
+command! -nargs=* -range MoveBlock <line1>,<line2>call MoveGroup(<f-args>)
+
+vnoremap <c-d> :MoveBlock down 
+vnoremap <c-u> :MoveBlock up 
 " }}}
 
 " Filetype Dependent Autocommands {{{
