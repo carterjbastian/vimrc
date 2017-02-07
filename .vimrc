@@ -226,12 +226,20 @@ endfunction
 autocmd BufRead ~/.vimrc :call InitVimrcSettings()
 " }}}
 
-" Filetype-dependent Functions to pre-process {{{
+" Filetype-dependent Functions to pre-process or customize settings for a file {{{
 function! PreprocessPythonFile()
     0r ~/.vim/templates/template.py  " Read in the python file template
     %s/DATE/\=strftime("%B, %Y")/g    " Replace the DATE placeholder with month,year
+endfunction
+
+function! CustomizePython()
+    " Set the commenting shortcuts
+    nnoremap <c-c> 0i#  <esc>
+    nnoremap <c-x> 02x
+    vnoremap <c-c> : s/^/# /gi<cr>
+    vnoremap <c-x> : s/^# //gi<cr>
     
-    " Set the commenting shortcuts and script abbreviation
+    " Set script abbreviation and definition searching
     iabbrev @#! #!/usr/bin/env python
     map <c-Space>  /def <c-R><c-W>
 
@@ -243,14 +251,53 @@ function! PreprocessPythonFile()
     :ia p/ print ""<Left> 
 endfunction
 
-function! PreprocessShellScript()
+function! PreprocessBashScript()
+    0r ~/.vim/templates/template.sh  " Read in the C File template
+    %s/DATE/\=strftime("%B, %Y")/g    " Replace the DATE placeholder with month,year
+endfunction
+
+function! CustomizeBash()
     iabbrev @#! #!/bin/bash
+endfunction
+
+function! PreprocessCFile()
+    0r ~/.vim/templates/template.c  " Read in the C File template
+    %s/DATE/\=strftime("%B, %Y")/g    " Replace the DATE placeholder with month,year
+    
+    " Replace the Filename in the comment
+    let b:filename=expand('%:t:r')
+    execute '%s/FNAME/' . b:filename . '/g'
+endfunction
+
+function! PreprocessHeaderFile()
+    0r ~/.vim/templates/template.h  " Read in the Header File template
+    %s/DATE/\=strftime("%B, %Y")/g    " Replace the DATE placeholder with month,year
+    
+    " Replace the Filename in the comment
+    let b:filename=expand('%:t:r')
+    execute '%s/FNAME/' . b:filename . '/g'
+
+    " Build the Header Guard
+    let b:hguard = toupper(b:filename) . '_H_'
+    execute '%s/HEADER_GUARD/' . b:hguard . '/g'
+endfunction
+
+function! CustomizeC()
+
 endfunction
 " }}}
 
+
 " Autocommands to call pre-processing functions
 au BufNewFile *.py call PreprocessPythonFile()
-au BufNewFile *.sh call PreprocessShellScript()
+au BufNewFile *.sh call PreprocessBashScript()
+au BufNewFile *.c call PreprocessCFile()
+au BufNewFile *h call PreprocessHeaderFile()
+
+au BufNewFile,BufRead *.py call CustomizePython()
+au BufNewFile,BufRead *.sh call CustomizeBash()
+au BufNewFile,BufRead *.c,*.h call CustomizeC()
+
 " }}}
 
 " Abbreviations and textual shortcuts {{{
