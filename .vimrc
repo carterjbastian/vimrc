@@ -222,6 +222,14 @@ vnoremap <c-u> :MoveBlock up
 
 " Filetype Dependent Autocommands {{{
 
+" Function to forgoe the space placed after an abbreviation
+" Add <C-R>=Eatchar('\s')<CR> at the end of any iabbr to suppress the white
+" space
+function! Eatchar(pat)
+    let c = nr2char(getchar(0))
+    return (c =~ a:pat) ? '' : c
+endfunc
+
 " Vimrc setup {{{
 " TODO(carter): Fix comment toggling into function that works with any range
 function! InitVimrcSettings()
@@ -238,15 +246,7 @@ endfunction
 autocmd BufRead ~/.vimrc :call InitVimrcSettings()
 " }}}
 
-" Function to forgoe the space placed after an abbreviation
-" Add <C-R>=Eatchar('\s')<CR> at the end of any iabbr to suppress the white
-" space
-function! Eatchar(pat)
-    let c = nr2char(getchar(0))
-    return (c =~ a:pat) ? '' : c
-endfunc
-
-" Filetype-dependent Functions to pre-process or customize settings for a file {{{
+" Python Customizations {{{
 function! PreprocessPythonFile()
     0r ~/.vim/templates/template.py  " Read in the python file template
     %s/DATE/\=strftime("%B, %Y")/g    " Replace the DATE placeholder with month,year
@@ -284,16 +284,24 @@ function! PostProcessPython()
     :execute "normal! gg/class\<cr>"
     mark c
 endfunction
+" }}}
 
+" Bash Customizations {{{
 function! PreprocessBashScript()
     0r ~/.vim/templates/template.sh  " Read in the C File template
     %s/DATE/\=strftime("%B, %Y")/g    " Replace the DATE placeholder with month,year
+
+    " Replace the Filename in the comment
+    let b:filename=expand('%:t:r')
+    execute '%s/FNAME/' . b:filename . '/g'
 endfunction
 
 function! CustomizeBash()
-    iabbrev @#! #!/bin/bash
+    iabbrev @#! #!/bin/bash<C-R>=Eatchar('\s')<CR>
 endfunction
+" }}}
 
+" C Customizations {{{
 function! PreprocessCFile()
     0r ~/.vim/templates/template.c  " Read in the C File template
     %s/DATE/\=strftime("%B, %Y")/g    " Replace the DATE placeholder with month,year
@@ -321,7 +329,6 @@ function! CustomizeC()
 endfunction
 " }}}
 
-
 " Autocommands to call pre-processing functions
 au BufNewFile *.py call PreprocessPythonFile()
 au BufNewFile *.sh call PreprocessBashScript()
@@ -333,8 +340,11 @@ au BufNewFile,BufRead *.sh call CustomizeBash()
 au BufNewFile,BufRead *.c,*.h call CustomizeC()
 
 au BufReadPost,BufNewFile *py silent! call PostProcessPython()
-" }}}
 
+" Remove trailing whitespace (but only from code when I know it's ok)
+" This happens via pymode, so don't run this command for python mode
+au BufWritePre *.sh,*.c,*.h %s/\s\+$//e
+" }}}
 
 " abbreviations and textual shortcuts {{{
 iabbrev @@ carter.bastian1@gmail.com
