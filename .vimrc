@@ -29,6 +29,7 @@ let g:pymode_lint = 0
 let g:pymode_trim_whitespaces = 1 " Trim whitespaces on save
 let g:pymode_run = 1 " Binds running python code to <leader>r
 let g:pymode_motion = 1
+let g:pymode_indent = 1 " Python indentation
 " }}}
 
 " Basic Settings {{{
@@ -237,6 +238,14 @@ endfunction
 autocmd BufRead ~/.vimrc :call InitVimrcSettings()
 " }}}
 
+" Function to forgoe the space placed after an abbreviation
+" Add <C-R>=Eatchar('\s')<CR> at the end of any iabbr to suppress the white
+" space
+function! Eatchar(pat)
+    let c = nr2char(getchar(0))
+    return (c =~ a:pat) ? '' : c
+endfunc
+
 " Filetype-dependent Functions to pre-process or customize settings for a file {{{
 function! PreprocessPythonFile()
     0r ~/.vim/templates/template.py  " Read in the python file template
@@ -251,15 +260,29 @@ function! CustomizePython()
     vnoremap <c-x> : s/^# //gi<cr>
     
     " Set script abbreviation and definition searching
-    iabbrev @#! #!/usr/bin/env python
-    map <c-Space>  /def <c-R><c-W>
+    iabbrev @#! #!/usr/bin/env python<C-R>=Eatchar('\s')<CR>
+    map <leader>d  ?def <c-R><c-W><CR>
 
     " Python code autocompletion
-    :ia i/ if ( ): <Up><End><Left><Left><Left>
-    :ia ie/ if ( ): <BS><BS> else:<Up><Up><Up><End><Left><Left><Left>
-    :ia iee/ if ( ): <BS><BS> elif (  ): <BS> else:<Up><Up>    <Up><Up><Up><End><Left><Left><Left>
-    :ia d/ def ( ): """  """<Up><End><Left><Left><Left>
-    :ia p/ print ""<Left> 
+    iabbr <silent> i/ if :<Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> ie/ if :<CR>else :<Up><End><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> iee/ if :<CR>elif :<CR>else :<Up><Up><End><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> d/ def():<Cr>""" """<Up><End><Left><Left><Left>
+    iabbr <silent> p/ print ""<Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> c/ class():<CR>""" """<CR>def __init__(self):<CR>""" """<Up><Up><Up><End><Left><Left><Left>
+    iabbr <silent> f/ for in :<Left><Left><Left><Left><Left>
+    iabbr <silent> w/ with as :<Left><Left><Left><Left><Left>
+
+endfunction
+
+function! PostProcessPython()
+    " Auto-set marks based on comments
+    :execute "normal! gg/import\<cr>"
+    mark i
+    :execute "normal! gg/def\<cr>"
+    mark f
+    :execute "normal! gg/class\<cr>"
+    mark c
 endfunction
 
 function! PreprocessBashScript()
@@ -309,9 +332,11 @@ au BufNewFile,BufRead *.py call CustomizePython()
 au BufNewFile,BufRead *.sh call CustomizeBash()
 au BufNewFile,BufRead *.c,*.h call CustomizeC()
 
+au BufReadPost,BufNewFile *py silent! call PostProcessPython()
 " }}}
 
-" Abbreviations and textual shortcuts {{{
+
+" abbreviations and textual shortcuts {{{
 iabbrev @@ carter.bastian1@gmail.com
 iabbrev @n Carter J. Bastian
 iabbrev <expr> @d strftime("%b %d, %Y")
