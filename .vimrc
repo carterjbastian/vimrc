@@ -53,7 +53,7 @@ set shiftwidth=4
 set softtabstop=4
 set expandtab
 filetype plugin indent on
-
+let g:colors_name = "default"
 " Use this snippet from the autoclose plugin to make arrow keys work correctly
 if &term[:4] == "xterm" || &term[:5] == 'screen' || &term[:3] == 'rxvt'
   inoremap <silent> <C-[>OC <RIGHT>
@@ -218,6 +218,18 @@ command! -nargs=* -range MoveBlock <line1>,<line2>call MoveGroup(<f-args>)
 
 vnoremap <c-d> :MoveBlock down 
 vnoremap <c-u> :MoveBlock up 
+
+function! ToggleColorscheme()
+    " I switch between my default colorscheme and monokai for now
+    if g:colors_name == "default"
+        colorscheme monokai
+    elseif g:colors_name == "monokai"
+        colorscheme default
+    endif
+endfunction
+
+nnoremap <m-c> :call ToggleColorscheme()<CR>
+
 " }}}
 
 " Filetype Dependent Autocommands {{{
