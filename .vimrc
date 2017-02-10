@@ -54,13 +54,14 @@ set softtabstop=4
 set expandtab
 filetype plugin indent on
 let g:colors_name = "default"
+
 " Use this snippet from the autoclose plugin to make arrow keys work correctly
 if &term[:4] == "xterm" || &term[:5] == 'screen' || &term[:3] == 'rxvt'
   inoremap <silent> <C-[>OC <RIGHT>
 endif
 " }}}
 
-" Movement Mappings {{{
+" Tab and Window Mappings {{{
 nnoremap gh gT
 nnoremap gl gt
 nnoremap gH :tabmove -1<CR>
@@ -76,7 +77,25 @@ nnoremap <m-k> <C-w>K
 nnoremap <m-l> <C-w>L
 nnoremap <m-h> <C-w>H
 
+" Splitting windows
+nnoremap <leader>sh :leftabove vnew<CR>
+nnoremap <leader>sl :rightbelow vnew<CR>
+nnoremap <leader>sk :leftabove new<CR>
+nnoremap <leader>sj :rightbelow new<CR>
 
+" Shortcuts for switching to a certain tab
+nnoremap <leader>1 1gt
+nnoremap <leader>2 2gt
+nnoremap <leader>3 3gt
+nnoremap <leader>4 4gt
+nnoremap <leader>5 5gt
+nnoremap <leader>6 6gt
+nnoremap <leader>7 7gt
+nnoremap <leader>8 8gt
+nnoremap <leader>9 9gt
+
+" Shortcut to open a new tab
+nnoremap <C-t> :tabe 
 " }}}
 
 " Key re-mappings {{{
@@ -134,28 +153,10 @@ nnoremap <leader>tn :set relativenumber!<cr>
 nnoremap <leader>tp :set paste!<cr>
 nnoremap <leader>th :set hlsearch!<cr>
 
-" Shortcuts for switching to a certain tab
-nnoremap <leader>1 1gt
-nnoremap <leader>2 2gt
-nnoremap <leader>3 3gt
-nnoremap <leader>4 4gt
-nnoremap <leader>5 5gt
-nnoremap <leader>6 6gt
-nnoremap <leader>7 7gt
-nnoremap <leader>8 8gt
-nnoremap <leader>9 9gt
-
 " Git commands 
 nnoremap <leader>gs :Gstatus<cr>
 nnoremap <leader>ga :Git add %<cr>
 nnoremap <leader>gc :Gcommit<cr>
-
-" Splitting windows
-nnoremap <leader>sh :leftabove vnew<CR>
-nnoremap <leader>sl :rightbelow vnew<CR>
-nnoremap <leader>sk :leftabove new<CR>
-nnoremap <leader>sj :rightbelow new<CR>
-
 " }}}
 
 " Custom Operations (Control Key Mappings) {{{
@@ -411,7 +412,3 @@ iabbrev adn and
 " }}}
 
 " }}}
-
-
-" Testing ground
-
