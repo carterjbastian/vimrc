@@ -325,7 +325,44 @@ function! PreprocessHeaderFile()
 endfunction
 
 function! CustomizeC()
+    " Set the commenting shortcuts
+    nnoremap <c-c> 0i//  <esc>
+    nnoremap <c-x> 04x
+    vnoremap <c-c> : s/^/\/\/  /gi<cr>
+    vnoremap <c-x> : s/^\/\/  //gi<cr>
 
+    " Shortcut for adding a semicolon at the end of a line
+    nnoremap <leader>; :execute "normal! mqA;<C-v><ESC>`q"<CR>
+
+    " C code autocompletion
+    iabbr <silent> i/ if () {<CR>}<Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> ie/ if () {<CR>} else {<CR>}<Up><Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> iee/ if () {<CR>} else if ( ) {<CR>} else {<CR>}<Up><Up><Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> f/ for (;;;) {<CR>}<Up><End><Left><Left><Left><Left><Left><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> w/ while () {<CR>}<Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> d/ do {<CR>} while ()<Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> s/ switch () {<CR>case  :<CR>break;<CR>case  :<CR>break;<CR>default :<CR>}<Up><Up><Up><Up><Up><Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> m/ int main(int argc, char **agrv) {<CR>/* Main Function */<CR>}<Up><End><C-R>=Eatchar('\s')<CR>
+endfunction
+
+function! PostProcessC()
+    " Auto-set marks based on comments
+    :execute "normal! gg/#include\<cr>"
+    mark i
+    :execute "normal! gg/declarations\<cr>"
+    mark f
+    :execute "normal! gg/main(\<cr>"
+    mark m
+endfunction
+
+function! PostProcessHeader()
+    " Auto-set marks based on comments
+    :execute "normal! gg/#include\<cr>"
+    mark i
+    :execute "normal! gg/declarations\<cr>"
+    mark f
+    :execute "normal! gg/Macro\<cr>"
+    mark m
 endfunction
 " }}}
 
@@ -340,6 +377,8 @@ au BufNewFile,BufRead *.sh call CustomizeBash()
 au BufNewFile,BufRead *.c,*.h call CustomizeC()
 
 au BufReadPost,BufNewFile *py silent! call PostProcessPython()
+au BufReadPost,BufNewFile *c silent! call PostProcessC()
+au BufReadPost,BufNewFile *h silent! call PostProcessHeader()
 
 " Remove trailing whitespace (but only from code when I know it's ok)
 " This happens via pymode, so don't run this command for python mode
