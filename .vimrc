@@ -37,7 +37,7 @@ set nocompatible
 set showcmd
 set backspace=indent,eol,start
 set timeoutlen=750 " Three Quarters the Default timeout length
-:set vb " Visual Bell
+set vb " Visual Bell
 set autoindent " Turn on autoindent
 set smartindent " Turn on smart indentation
 set number
@@ -45,7 +45,6 @@ set hlsearch
 set sidescroll=5
 set ignorecase
 set smartcase
-
 set colorcolumn=80
 syntax on
 filetype on
@@ -61,21 +60,54 @@ if &term[:4] == "xterm" || &term[:5] == 'screen' || &term[:3] == 'rxvt'
 endif
 " }}}
 
+" Key re-mappings {{{
+" Remap the leader key and remove default spacebar functionality
+nnoremap <space> <NOP>
+vnoremap <space> <NOP>
+
+let mapleader = " " " Set the map leader
+
+" Change the <ESC> key mapping and remove the old one
+inoremap jk <ESC>
+cnoremap jk <ESC>
+vnoremap <v> <ESC>
+inoremap <ESC> <NOP>
+vnoremap <ESC> <NOP>
+
+" Remap the control sequences to their C- counter parts
+inoremap  <C-l>
+inoremap  <C-b>
+inoremap  <C-z>
+
+" A short vimscript to fix the option key to meta in OS X.
+" This is magic. It works because it says so in
+" http://vim.wikia.com/wiki/Fix_meta-keys_that_break_out_of_Insert_mode
+let c='a'
+while c <= 'z'
+  exec "set <M-".tolower(c).">=\e".c
+  exec "imap \e".c." <M-".tolower(c).">"
+  let c = nr2char(1+char2nr(c))
+endw
+" }}}
+
 " Tab and Window Mappings {{{
+" Moving between tabs
 nnoremap gh gT
 nnoremap gl gt
 nnoremap gH :tabmove -1<CR>
 nnoremap gL :tabmove +1<CR>
 
+" Moving between windows
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
 
-nnoremap <m-j> <C-w>J
-nnoremap <m-k> <C-w>K
-nnoremap <m-l> <C-w>L
-nnoremap <m-h> <C-w>H
+" Moving windows
+nnoremap <M-j> <C-w>J
+nnoremap <M-k> <C-w>K
+nnoremap <M-l> <C-w>L
+nnoremap <M-h> <C-w>H
 
 " Splitting windows
 nnoremap <leader>sh :leftabove vnew<CR>
@@ -98,103 +130,69 @@ nnoremap <leader>9 9gt
 nnoremap <C-t> :tabe 
 " }}}
 
-" Key re-mappings {{{
-" Remap the leader key and remove default spacebar functionality
-nnoremap <space> <nop>
-vnoremap <space> <nop>
-
-let mapleader = " " " Set the map leader
-
-" Change the <esc> key mapping and remove the old one
-inoremap jk <esc>
-cnoremap jk <esc>
-vnoremap <v> <esc>
-
-inoremap <esc> <nop>
-vnoremap <esc> <nop>
-
-" Remap the control sequences to their C- counter parts
-inoremap  <c-l>
-inoremap  <c-b>
-inoremap  <c-z>
-
-" Short vimscript to fix the option key to meta in OS X {{{
-" This is magic. It works because it says so in
-" http://vim.wikia.com/wiki/Fix_meta-keys_that_break_out_of_Insert_mode
-let c='a'
-while c <= 'z'
-  exec "set <M-".tolower(c).">=\e".c
-  exec "imap \e".c." <M-".tolower(c).">"
-  let c = nr2char(1+char2nr(c))
-endw
-" }}}
-
-" }}}
-
 " Leader-key shortcuts {{{
 
 " Writing the file and quiting
 " Awful Nemonics = write-leave, quit-nosave, quit-edit
-nnoremap <leader>w :w<cr>
-nnoremap <leader>wl :wq<cr>
-nnoremap <leader>qn :q!<cr>
+nnoremap <leader>w :w<CR>
+nnoremap <leader>wl :wq<CR>
+nnoremap <leader>qn :q!<CR>
 
 " Command to write-quit current file and open a different file in the same buffer
 command! -nargs=1 -complete=file WriteEditFile w|bd|e <args>
 nnoremap <leader>we :WriteEditFile 
 
-
 " Edit or source my vimrc
-nnoremap <leader>ev :vsplit ~/.vimrc<cr>
-nnoremap <leader>es :source ~/.vimrc<cr>
+nnoremap <leader>ev :vsplit ~/.vimrc<CR>
+nnoremap <leader>es :source ~/.vimrc<CR>
 
-" Shorcuts for toggling settings
-nnoremap <leader>tn :set relativenumber!<cr>
-nnoremap <leader>tp :set paste!<cr>
-nnoremap <leader>th :set hlsearch!<cr>
+" Shorcuts for toggling settings that I only sometimes like
+nnoremap <leader>tn :set relativenumber!<CR>
+nnoremap <leader>tp :set paste!<CR>
+nnoremap <leader>th :set hlsearch!<CR>
 
 " Git commands 
-nnoremap <leader>gs :Gstatus<cr>
-nnoremap <leader>ga :Git add %<cr>
-nnoremap <leader>gc :Gcommit<cr>
+nnoremap <leader>gs :Gstatus<CR>
+nnoremap <leader>ga :Git add %<CR>
+nnoremap <leader>gc :Gcommit<CR>
 " }}}
 
 " Custom Operations (Control Key Mappings) {{{
-
 " Insert Mode Operations {{{
-
 " toggle capitalization of {count} words (Doesn't work on single Characters)
-inoremap <c-l> <esc>hEvBuEa
-inoremap <c-u> <esc>hEvBUEa
+inoremap <C-l> <ESC>hEvBuEa
+inoremap <C-u> <ESC>hEvBUEa
 
 " clear current line and continue in insert mode where the first character was
-inoremap <c-o> <esc>$v^c
+inoremap <C-o> <ESC>$v^c
 " }}}
 
 " Normal Mode Operations {{{
 " Clear the current line and enter insert mode where the first character was
-nnoremap <c-o> $v^c
+nnoremap <C-o> $v^c
+
 " Clear everything on the current line
-nnoremap <c-n> $v0x
+nnoremap <C-n> $v0x
 " }}}
 
 " Visual Mode Operations {{{
 " Wrap a visual selection in quotes
-vnoremap q xi '<c-R>"'<esc>
-vnoremap Q xi "<c-R>""<esc>
+vnoremap q xi '<C-R>"'<ESC>
+vnoremap Q xi "<C-R>""<ESC>
 " }}}
 " }}}
 
 " Smaller Customizations (Meta Key Mappings) {{{
 " Start editing on the beginning or end of the file
-nnoremap <m-b> ggO
-nnoremap <m-e> Go
-" Turn off highlighting (after search)
-nnoremap <m-n> :noh<cr>
+nnoremap <M-b> ggO
+nnoremap <M-e> Go
 
-" Move a line or group of lines up or down by count
-nnoremap <m-u> @='ddkP'<cr> 
-nnoremap <m-d> @='ddjP'<cr>
+" Turn off highlighting (after search)
+nnoremap <M-n> :noh<CR>
+
+" Move a line up or down by count lines
+nnoremap <M-u> @='ddkP'<CR> 
+nnoremap <M-d> @='ddjP'<CR>
 
 " Define a function to do the moving to let this work in visual mode
 function! MoveGroup(direction, lines) range
@@ -209,17 +207,17 @@ function! MoveGroup(direction, lines) range
         elseif a:direction == "down"
             normal j
         endif
-
         let c += 1
     endwhile
     normal P
 endfunction
 
+" Map the block moving function in visual mode
 command! -nargs=* -range MoveBlock <line1>,<line2>call MoveGroup(<f-args>)
+vnoremap <C-d> :MoveBlock down 
+vnoremap <C-u> :MoveBlock up 
 
-vnoremap <c-d> :MoveBlock down 
-vnoremap <c-u> :MoveBlock up 
-
+" Function to switch between colorschemes
 function! ToggleColorscheme()
     " I switch between my default colorscheme and monokai for now
     if g:colors_name == "default"
@@ -229,31 +227,32 @@ function! ToggleColorscheme()
     endif
 endfunction
 
-nnoremap <m-c> :call ToggleColorscheme()<CR>
-
+" Map color scheme toggling
+nnoremap <M-c> :call ToggleColorscheme()<CR>
 " }}}
 
 " Filetype Dependent Autocommands {{{
 
 " Function to forgoe the space placed after an abbreviation
 " Add <C-R>=Eatchar('\s')<CR> at the end of any iabbr to suppress the white
-" space
+" space. Courtesy of discussion on:
+" http://stackoverflow.com/questions/11858927
 function! Eatchar(pat)
     let c = nr2char(getchar(0))
     return (c =~ a:pat) ? '' : c
 endfunc
 
 " Vimrc setup {{{
-" TODO(carter): Fix comment toggling into function that works with any range
 function! InitVimrcSettings()
     set fdm=marker " Set up folds to work correctly
     set tw=0 
     set formatoptions-=t " Don't auto-wrap text (except comments)
+
     " Set up commenting options in normal and visual mode
-    nnoremap <c-c> 0i" <esc>
-    nnoremap <c-x> 02x
-    vnoremap <c-c> : s/^/" /gi<cr>
-    vnoremap <c-x> : s/^" //gi<cr>
+    nnoremap <C-c> 0i" <ESC>
+    nnoremap <C-x> 02x
+    vnoremap <C-c> : s/^/" /gi<CR>
+    vnoremap <C-x> : s/^" //gi<CR>
 endfunction
 
 autocmd BufRead ~/.vimrc :call InitVimrcSettings()
@@ -267,34 +266,33 @@ endfunction
 
 function! CustomizePython()
     " Set the commenting shortcuts
-    nnoremap <c-c> 0i#  <esc>
-    nnoremap <c-x> 02x
-    vnoremap <c-c> : s/^/# /gi<cr>
-    vnoremap <c-x> : s/^# //gi<cr>
+    nnoremap <C-c> 0i#  <ESC>
+    nnoremap <C-x> 02x
+    vnoremap <C-c> : s/^/# /gi<CR>
+    vnoremap <C-x> : s/^# //gi<CR>
     
     " Set script abbreviation and definition searching
     iabbrev @#! #!/usr/bin/env python<C-R>=Eatchar('\s')<CR>
-    map <leader>d  ?def <c-R><c-W><CR>
+    map <leader>d  ?def <C-R><C-W><CR>
 
     " Python code autocompletion
     iabbr <silent> i/ if :<Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> ie/ if :<CR>else :<Up><End><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> iee/ if :<CR>elif :<CR>else :<Up><Up><End><Left><C-R>=Eatchar('\s')<CR>
-    iabbr <silent> d/ def():<Cr>""" """<Up><End><Left><Left><Left>
+    iabbr <silent> d/ def():<CR>""" """<Up><End><Left><Left><Left>
     iabbr <silent> p/ print ""<Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> c/ class():<CR>""" """<CR>def __init__(self):<CR>""" """<Up><Up><Up><End><Left><Left><Left>
     iabbr <silent> f/ for in :<Left><Left><Left><Left><Left>
     iabbr <silent> w/ with as :<Left><Left><Left><Left><Left>
-
 endfunction
 
 function! PostProcessPython()
     " Auto-set marks based on comments
-    :execute "normal! gg/import\<cr>"
+    :execute "normal! gg/import\<CR>"
     mark i
-    :execute "normal! gg/def\<cr>"
+    :execute "normal! gg/def\<CR>"
     mark f
-    :execute "normal! gg/class\<cr>"
+    :execute "normal! gg/class\<CR>"
     mark c
 endfunction
 " }}}
@@ -339,10 +337,10 @@ endfunction
 
 function! CustomizeC()
     " Set the commenting shortcuts
-    nnoremap <c-c> 0i//  <esc>
-    nnoremap <c-x> 04x
-    vnoremap <c-c> : s/^/\/\/  /gi<cr>
-    vnoremap <c-x> : s/^\/\/  //gi<cr>
+    nnoremap <C-c> 0i//  <ESC>
+    nnoremap <C-x> 04x
+    vnoremap <C-c> : s/^/\/\/  /gi<CR>
+    vnoremap <C-x> : s/^\/\/  //gi<CR>
 
     " Shortcut for adding a semicolon at the end of a line
     nnoremap <leader>; :execute "normal! mqA;<C-v><ESC>`q"<CR>
@@ -360,26 +358,26 @@ endfunction
 
 function! PostProcessC()
     " Auto-set marks based on comments
-    :execute "normal! gg/#include\<cr>"
+    :execute "normal! gg/#include\<CR>"
     mark i
-    :execute "normal! gg/declarations\<cr>"
+    :execute "normal! gg/declarations\<CR>"
     mark f
-    :execute "normal! gg/main(\<cr>"
+    :execute "normal! gg/main(\<CR>"
     mark m
 endfunction
 
 function! PostProcessHeader()
     " Auto-set marks based on comments
-    :execute "normal! gg/#include\<cr>"
+    :execute "normal! gg/#include\<CR>"
     mark i
-    :execute "normal! gg/declarations\<cr>"
+    :execute "normal! gg/declarations\<CR>"
     mark f
-    :execute "normal! gg/Macro\<cr>"
+    :execute "normal! gg/Macro\<CR>"
     mark m
 endfunction
 " }}}
 
-" Autocommands to call pre-processing functions
+" Autocommands to call pre/post-processing and customization functions
 au BufNewFile *.py call PreprocessPythonFile()
 au BufNewFile *.sh call PreprocessBashScript()
 au BufNewFile *.c call PreprocessCFile()
@@ -399,16 +397,15 @@ au BufWritePre *.sh,*.c,*.h %s/\s\+$//e
 " }}}
 
 " abbreviations and textual shortcuts {{{
+" Common abbreviations
 iabbrev @@ carter.bastian1@gmail.com
 iabbrev @n Carter J. Bastian
 iabbrev <expr> @d strftime("%b %d, %Y")
 
-" Autocorrect {{{
+" Autocorrect
 iabbrev pirnt print
 iabbrev prnit print
 iabbrev prnt print
 iabbrev teh the
 iabbrev adn and
-" }}}
-
 " }}}
