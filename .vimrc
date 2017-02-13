@@ -312,6 +312,14 @@ function! CustomizeBash()
 endfunction
 " }}}
 
+" Javascript Customizations {{{
+function! CustomizeJavascript()
+    " Use indentation of 2 for JS
+    set shiftwidth=2
+    set softtabstop=2
+endfunction
+" }}}
+
 " C Customizations {{{
 function! PreprocessCFile()
     0r ~/.vim/templates/template.c  " Read in the C File template
@@ -320,6 +328,10 @@ function! PreprocessCFile()
     " Replace the Filename in the comment
     let b:filename=expand('%:t:r')
     execute '%s/FNAME/' . b:filename . '/g'
+    
+    " Use indentation of 2 for C
+    set shiftwidth=2
+    set softtabstop=2
 endfunction
 
 function! PreprocessHeaderFile()
@@ -381,15 +393,16 @@ endfunction
 au BufNewFile *.py call PreprocessPythonFile()
 au BufNewFile *.sh call PreprocessBashScript()
 au BufNewFile *.c call PreprocessCFile()
-au BufNewFile *h call PreprocessHeaderFile()
+au BufNewFile *.h call PreprocessHeaderFile()
 
 au BufNewFile,BufRead *.py call CustomizePython()
 au BufNewFile,BufRead *.sh call CustomizeBash()
 au BufNewFile,BufRead *.c,*.h call CustomizeC()
+au BufNewFile,BufRead *.js call CustomizeJavascript()
 
-au BufReadPost,BufNewFile *py silent! call PostProcessPython()
-au BufReadPost,BufNewFile *c silent! call PostProcessC()
-au BufReadPost,BufNewFile *h silent! call PostProcessHeader()
+au BufReadPost,BufNewFile *.py silent! call PostProcessPython()
+au BufReadPost,BufNewFile *.c silent! call PostProcessC()
+au BufReadPost,BufNewFile *.h silent! call PostProcessHeader()
 
 " Remove trailing whitespace (but only from code when I know it's ok)
 " This happens via pymode, so don't run this command for python mode
