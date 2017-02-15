@@ -88,6 +88,20 @@ while c <= 'z'
   exec "imap \e".c." <M-".tolower(c).">"
   let c = nr2char(1+char2nr(c))
 endw
+
+" Switch the screen-line and line movement commands
+" This way, I can navigate through wrapped lines in READMEs and their ilk
+" without two button presses (which is usually what I want)
+nnoremap j gj
+nnoremap k gk
+nnoremap gj j
+nnoremap gk k
+
+vnoremap j gj
+vnoremap k gk
+vnoremap gj j
+vnoremap gk k
+
 " }}}
 
 " Tab and Window Mappings {{{
