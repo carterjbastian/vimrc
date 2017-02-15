@@ -128,6 +128,9 @@ nnoremap <leader>9 9gt
 
 " Shortcut to open a new tab
 nnoremap <C-t> :tabe 
+
+" Shorcut to close the current window or tab (mimics Chrome shortcut)
+nnoremap <M-w> <C-w>c
 " }}}
 
 " Leader-key shortcuts {{{
