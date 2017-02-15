@@ -268,8 +268,8 @@ function! InitVimrcSettings()
     " Set up commenting options in normal and visual mode
     nnoremap <C-c> 0i" <ESC>
     nnoremap <C-x> 02x
-    vnoremap <C-c> : s/^/" /gi<CR>
-    vnoremap <C-x> : s/^" //gi<CR>
+    vnoremap <C-c> : s/^/" /gi<bar>:noh<CR>
+    vnoremap <C-x> : s/^" //gi<bar>:noh<CR>
 endfunction
 " }}}
 
@@ -283,8 +283,8 @@ function! CustomizePython()
     " Set the commenting shortcuts
     nnoremap <C-c> 0i#  <ESC>
     nnoremap <C-x> 02x
-    vnoremap <C-c> : s/^/# /gi<CR>
-    vnoremap <C-x> : s/^# //gi<CR>
+    vnoremap <C-c> : s/^/# /gi<bar>:noh<CR>
+    vnoremap <C-x> : s/^# //gi<bar>:noh<CR>
     
     " Set script abbreviation and definition searching
     iabbrev @#! #!/usr/bin/env python<C-R>=Eatchar('\s')<CR>
@@ -314,7 +314,7 @@ endfunction
 
 " Bash Customizations {{{
 function! PreprocessBashScript()
-    0r ~/.vim/templates/template.sh  " Read in the C File template
+    0r ~/.vim/templates/template.sh  " Read in the Bash File template
     %s/DATE/\=strftime("%B, %Y")/g    " Replace the DATE placeholder with month,year
 
     " Replace the Filename in the comment
@@ -343,10 +343,6 @@ function! PreprocessCFile()
     " Replace the Filename in the comment
     let b:filename=expand('%:t:r')
     execute '%s/FNAME/' . b:filename . '/g'
-    
-    " Use indentation of 2 for C
-    set shiftwidth=2
-    set softtabstop=2
 endfunction
 
 function! PreprocessHeaderFile()
@@ -366,21 +362,30 @@ function! CustomizeC()
     " Set the commenting shortcuts
     nnoremap <C-c> 0i//  <ESC>
     nnoremap <C-x> 04x
-    vnoremap <C-c> : s/^/\/\/  /gi<CR>
-    vnoremap <C-x> : s/^\/\/  //gi<CR>
+    vnoremap <C-c> : s/^/\/\/  /gi<bar>:noh<CR>
+    vnoremap <C-x> : s/^\/\/  //gi<bar>:noh<CR>
+
+    " Use indentation of 2 for C
+    set shiftwidth=2
+    set softtabstop=2
 
     " Shortcut for adding a semicolon at the end of a line
     nnoremap <leader>; :execute "normal! mqA;<C-v><ESC>`q"<CR>
 
     " C code autocompletion
     iabbr <silent> i/ if () {<CR>}<Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> si/ if ()<Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> ie/ if () {<CR>} else {<CR>}<Up><Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> iee/ if () {<CR>} else if ( ) {<CR>} else {<CR>}<Up><Up><Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> f/ for (;;;) {<CR>}<Up><End><Left><Left><Left><Left><Left><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> w/ while () {<CR>}<Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> sw/ while ()<Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> d/ do {<CR>} while ()<Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> s/ switch () {<CR>case  :<CR>break;<CR>case  :<CR>break;<CR>default :<CR>}<Up><Up><Up><Up><Up><Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> m/ int main(int argc, char **agrv) {<CR>/* Main Function */<CR>}<Up><End><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> sn/ #include <><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> ln/ #include <><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> p/ printf("");<Left><Left><Left><C-R>=Eatchar('\s')<CR>
 endfunction
 
 function! PostProcessC()
@@ -426,6 +431,9 @@ au BufReadPost,BufNewFile *.h silent! call PostProcessHeader()
 " Recognize *.md extension as markdown (Thanks Tim Pope!)
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 
+" Recognize git commit messages as markdown
+autocmd FileType gitcommit set filetype=markdown
+
 " Remove trailing whitespace (but only from code when I know it's ok)
 " This happens via pymode, so don't run this command for python mode
 au BufWritePre *.sh,*.c,*.h %s/\s\+$//e
@@ -443,4 +451,6 @@ iabbrev prnit print
 iabbrev prnt print
 iabbrev teh the
 iabbrev adn and
+iabbrev elnght length
+iabbrev lenght length
 " }}}
