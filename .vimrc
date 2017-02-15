@@ -409,6 +409,9 @@ au BufReadPost,BufNewFile *.py silent! call PostProcessPython()
 au BufReadPost,BufNewFile *.c silent! call PostProcessC()
 au BufReadPost,BufNewFile *.h silent! call PostProcessHeader()
 
+" Recognize *.md extension as markdown (Thanks Tim Pope!)
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+
 " Remove trailing whitespace (but only from code when I know it's ok)
 " This happens via pymode, so don't run this command for python mode
 au BufWritePre *.sh,*.c,*.h %s/\s\+$//e
