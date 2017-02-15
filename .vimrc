@@ -254,8 +254,6 @@ function! InitVimrcSettings()
     vnoremap <C-c> : s/^/" /gi<CR>
     vnoremap <C-x> : s/^" //gi<CR>
 endfunction
-
-autocmd BufRead ~/.vimrc :call InitVimrcSettings()
 " }}}
 
 " Python Customizations {{{
@@ -388,6 +386,10 @@ function! PostProcessHeader()
     mark m
 endfunction
 " }}}
+
+" I have a hard link between my actual .vimrc and a copy of it in a git repo.
+" Run my .vimrc setup in either case.
+autocmd BufRead ~/.vimrc,~/brz/vimrc/.vimrc :call InitVimrcSettings()
 
 " Autocommands to call pre/post-processing and customization functions
 au BufNewFile *.py call PreprocessPythonFile()

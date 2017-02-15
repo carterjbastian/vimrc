@@ -5,6 +5,8 @@ Commands to configure vim. Depends on [fugitive.vim](https://github.com/tpope/vi
 ## How to Use
 If you're new to vim and thinking of copy-pasting this as your .vimrc, I would recommend against it. Even with the dependencies installed, not everything will work for you out of the box. It's probably a better idea just to read through it, see how things are done, and copy over ideas that you like with your own implementation.
 
+Quick warning: this vimrc includes a few hard-coded paths that are not likely to exist on your machine. Read through and edit the autocommands sections to make sure you remove path-dependent customizations such as adding template files from the `.vim/templates/` directory.
+
 If you're not new to vim, do whatever you want.
 
 ## Roadmap
