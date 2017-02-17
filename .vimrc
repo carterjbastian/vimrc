@@ -384,7 +384,7 @@ function! CustomizeC()
     iabbr <silent> s/ switch () {<CR>case  :<CR>break;<CR>case  :<CR>break;<CR>default :<CR>}<Up><Up><Up><Up><Up><Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> m/ int main(int argc, char **agrv) {<CR>/* Main Function */<CR>}<Up><End><C-R>=Eatchar('\s')<CR>
     iabbr <silent> sn/ #include <><Left><C-R>=Eatchar('\s')<CR>
-    iabbr <silent> ln/ #include <><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> ln/ #include ""<Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> p/ printf("");<Left><Left><Left><C-R>=Eatchar('\s')<CR>
 endfunction
 
