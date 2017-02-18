@@ -177,8 +177,8 @@ nnoremap <leader>gc :Gcommit<CR>
 " Custom Operations (Control Key Mappings) {{{
 " Insert Mode Operations {{{
 " toggle capitalization of {count} words (Doesn't work on single Characters)
-inoremap <C-l> <ESC>hEvBuEa
-inoremap <C-u> <ESC>hEvBUEa
+inoremap <C-l> <ESC>hEvbuea
+inoremap <C-u> <ESC>hEvbUea
 
 " clear current line and continue in insert mode where the first character was
 inoremap <C-o> <ESC>$v^c
@@ -377,12 +377,12 @@ function! CustomizeC()
     iabbr <silent> si/ if ()<Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> ie/ if () {<CR>} else {<CR>}<Up><Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> iee/ if () {<CR>} else if ( ) {<CR>} else {<CR>}<Up><Up><Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
-    iabbr <silent> f/ for (;;;) {<CR>}<Up><End><Left><Left><Left><Left><Left><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> f/ for (;;) {<CR>}<Up><End><Left><Left><Left><Left><Left><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> w/ while () {<CR>}<Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> sw/ while ()<Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> d/ do {<CR>} while ()<Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> s/ switch () {<CR>case  :<CR>break;<CR>case  :<CR>break;<CR>default :<CR>}<Up><Up><Up><Up><Up><Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
-    iabbr <silent> m/ int main(int argc, char **agrv) {<CR>/* Main Function */<CR>}<Up><End><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> m/ int main(int argc, char **argv) {<CR>/* Main Function */<CR>}<Up><End><C-R>=Eatchar('\s')<CR>
     iabbr <silent> sn/ #include <><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> ln/ #include ""<Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> p/ printf("");<Left><Left><Left><C-R>=Eatchar('\s')<CR>
@@ -390,7 +390,9 @@ endfunction
 
 function! PostProcessC()
     " Auto-set marks based on comments
-    :execute "normal! gg/#include\<CR>"
+    " I'm placing an educated bet that the vase majority of my C files will
+    " have system includes
+    :execute "normal! gg/System Includes\<CR>"
     mark i
     :execute "normal! gg/declarations\<CR>"
     mark f
@@ -400,7 +402,7 @@ endfunction
 
 function! PostProcessHeader()
     " Auto-set marks based on comments
-    :execute "normal! gg/#include\<CR>"
+    :execute "normal! gg/System Includes\<CR>"
     mark i
     :execute "normal! gg/declarations\<CR>"
     mark f
