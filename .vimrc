@@ -377,7 +377,7 @@ function! CustomizeC()
     iabbr <silent> si/ if ()<Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> ie/ if () {<CR>} else {<CR>}<Up><Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> iee/ if () {<CR>} else if ( ) {<CR>} else {<CR>}<Up><Up><Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
-    iabbr <silent> f/ for (;;) {<CR>}<Up><End><Left><Left><Left><Left><Left><Left><C-R>=Eatchar('\s')<CR>
+    iabbr <silent> f/ for (;;) {<CR>}<Up><End><Left><Left><Left><Left><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> w/ while () {<CR>}<Up><End><Left><Left><Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> sw/ while ()<Left><C-R>=Eatchar('\s')<CR>
     iabbr <silent> d/ do {<CR>} while ()<Left><C-R>=Eatchar('\s')<CR>
