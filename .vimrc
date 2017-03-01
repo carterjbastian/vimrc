@@ -7,6 +7,7 @@
 " Always check `:help index.txt` and `:map!` before mapping to makes sure that
 " you aren't overriding anything you'd like to keep.
 
+"Add a comment
 " Plugins {{{
 " Load the following plugins: fugitive.vim, python-mode
 call pathogen#infect()
@@ -179,6 +180,12 @@ nnoremap <leader>gc :Gcommit<CR>
 " toggle capitalization of {count} words (Doesn't work on single Characters)
 inoremap <C-l> <ESC>hEvbuea
 inoremap <C-u> <ESC>hEvbUea
+
+" I often find that I'm typing and want to insert a space in front of
+" the cursor without exiting insert mode. Similarly, I often want to delete
+" the character directly after the cursor in insert mode.
+inoremap <C-]> <ESC>a <ESC>i
+inoremap <C-[> <ESC>lxi
 
 " clear current line and continue in insert mode where the first character was
 inoremap <C-o> <ESC>$v^c
