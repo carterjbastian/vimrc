@@ -418,9 +418,27 @@ function! PostProcessHeader()
 endfunction
 " }}}
 
+" LaTeX setup {{{
+function! InitLaTeXSettings()
+    set fdm=marker " Set up folds to work correctly
+    set tw=0 
+    set formatoptions-=t " Don't auto-wrap text (except comments)
+
+    " Set up commenting options in normal and visual mode
+    nnoremap <C-c> 0i% <ESC>
+    nnoremap <C-x> 02x
+    vnoremap <C-c> : s/^/% /gi<bar>:noh<CR>
+    vnoremap <C-x> : s/^% //gi<bar>:noh<CR>
+
+    " Turn indenting off
+    setl noai nocin nosi inde=
+endfunction
+" }}}
+
 " I have a hard link between my actual .vimrc and a copy of it in a git repo.
 " Run my .vimrc setup in either case.
-autocmd BufRead ~/.vimrc,~/brz/vimrc/.vimrc :call InitVimrcSettings()
+autocmd BufRead ~/.vimrc,~/brz/vimrc/.vimrc call InitVimrcSettings()
+autocmd BufNewFile,BufReadPost *.tex call InitLaTeXSettings()
 
 " Autocommands to call pre/post-processing and customization functions
 au BufNewFile *.py call PreprocessPythonFile()
